@@ -9,7 +9,6 @@ using Solver;
 [TestFixture]
 public class SolverTests
 {
-    // Источник данных для SAT файлов
     public static IEnumerable<TestCaseData> SATFilesSource()
     {
         string testDataDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData");
@@ -20,7 +19,6 @@ public class SolverTests
         }
     }
 
-    // Источник данных для UNSAT файлов
     public static IEnumerable<TestCaseData> UNSATFilesSource()
     {
         string testDataDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData");
@@ -31,7 +29,6 @@ public class SolverTests
         }
     }
 
-    // Тест для каждого SAT файла
     [TestCaseSource(nameof(SATFilesSource))]
     public void SATTest(string filePath)
     {
@@ -39,7 +36,6 @@ public class SolverTests
         Assert.That(answer[0], Is.EqualTo("SAT"), $"Failed on file {Path.GetFileName(filePath)}");
     }
 
-    // Тест для каждого UNSAT файла
     [TestCaseSource(nameof(UNSATFilesSource))]
     public void UNSATTest(string filePath)
     {
