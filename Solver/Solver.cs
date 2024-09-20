@@ -2,8 +2,15 @@ namespace Solver;
 
 public class Solver
 {
-    private static List<int>? Solve(List<List<int>> clauses, List<int> answer)
+    private static List<int>? Solve(List<List<int>> clauses, List<int> answer, int trueLiteral = 0)
     {
+        if (trueLiteral != 0)
+        {
+            answer.Add(trueLiteral);
+            clauses.RemoveAll(c => c.Contains(trueLiteral)); // удаляем клозы которые стали истинны
+            clauses.ForEach(c => c.RemoveAll(x => x == -trueLiteral)); // удаляем из клоз ложный литерал
+        }
+        
         if (clauses.Any(c => c.Count == 0))
         {
             return null;
@@ -51,21 +58,8 @@ public class Solver
          }
          
          var chosenLiteral = clauses.First().First();
-         answer.Add(chosenLiteral);
-         clauses.RemoveAll(c => c.Contains(chosenLiteral)); // удаляем клозы которые стали истинны
-         clauses.ForEach(c => c.RemoveAll(x => x == -chosenLiteral)); // удаляем из клоз ложный литерал
-         var solveResult = Solve(clauses.Clone(), answer.Clone());
-         
-         if (solveResult == null)
-         {
-             answer.Remove(chosenLiteral);
-             answer.Add(-chosenLiteral);
-             clauses.RemoveAll(c => c.Contains(-chosenLiteral)); // удаляем клозы которые стали истинны
-             clauses.ForEach(c => c.RemoveAll(x => x == chosenLiteral)); // удаляем из клоз ложный литерал
-             return Solve(clauses.Clone(), answer.Clone());
-         }
-
-         return solveResult;
+         return Solve(clauses.Clone(), answer.Clone(), chosenLiteral) 
+                ?? Solve(clauses.Clone(), answer.Clone(), -chosenLiteral);
     }
 
     public static List<string> Solve(string filePath)
@@ -77,7 +71,7 @@ public class Solver
             if (line.StartsWith("c") || line.StartsWith("p")) continue;
             var clause = line
                 .Split()
-                .Where(c => !string.IsNullOrEmpty(c))
+                .Where(c => !string.IsNullOrEmpty(c) && c != "0")
                 .Select(int.Parse)
                 .ToList();
             
