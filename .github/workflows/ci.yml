@@ -41,4 +41,4 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Run tests
-      run: dotnet test --no-build Solver/Solver.sln
+      run: dotnet test Solver/Solver.sln
