@@ -2,11 +2,9 @@
 ## Окружение
 `.NET 8`
 ## Билд
-- `cd Solver`
-- `dotnet build Solver.sln`
+- `dotnet build ./Solver/Solver.sln`
 ## Запуск
-- `cd Solver`
-- `dotnet run Solver.sln`
+- `dotnet run --project ./Solver/Solver.csproj <FILEPATH>`
+### FILEPATH - путь к файлу с формулой
 ## Тесты
-- `cd Solver`
-- `dotnet test Solver.sln`
+- `dotnet test ./Solver/Solver.sln`
