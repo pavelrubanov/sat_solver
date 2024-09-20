@@ -11,15 +11,8 @@ public class Solver
             clauses.ForEach(c => c.RemoveAll(x => x == -trueLiteral)); // удаляем из клоз ложный литерал
         }
         
-        if (clauses.Any(c => c.Count == 0))
-        {
-            return null;
-        }
-
-        if (clauses.Count == 0)
-        {
-            return answer;
-        }
+        if (clauses.Any(c => c.Count == 0)) return null;
+        if (clauses.Count == 0) return answer;
         
         // Правило единственной клаузулы
         clauses
@@ -47,15 +40,8 @@ public class Solver
                  }
              });
          
-         if (clauses.Any(c => c.Count == 0))
-         {
-             return null;
-         }
-         
-         if (clauses.Count == 0)
-         {
-             return answer;
-         }
+         if (clauses.Any(c => c.Count == 0)) return null;
+         if (clauses.Count == 0) return answer;
          
          var chosenLiteral = clauses.First().First();
          return Solve(clauses.Clone(), answer.Clone(), chosenLiteral) 
