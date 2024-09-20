@@ -2,7 +2,7 @@ namespace Solver;
 
 public class Solver
 {
-    public static List<int>? Solve(List<List<int>> clauses, List<int> answer)
+    private static List<int>? Solve(List<List<int>> clauses, List<int> answer)
     {
         if (clauses.Any(c => c.Count == 0))
         {
@@ -67,6 +67,33 @@ public class Solver
 
          return solveResult;
     }
+
+    public static List<string> Solve(string filePath)
+    {
+        var file = File.ReadAllLines(filePath);
+        var clauses = new List<List<int>>();
+        foreach (var line in file)
+        {
+            if (line.StartsWith("c") || line.StartsWith("p")) continue;
+            var clause = line
+                .Split()
+                .Where(c => !string.IsNullOrEmpty(c))
+                .Select(int.Parse)
+                .ToList();
+            
+            clauses.Add(clause);
+        }
+        
+        var answer = Solve(clauses, new List<int>());
+        if (answer == null)
+        {
+            return new List<string>(){"UNSAT"};
+        }
+        
+        var result = new List<string>(){"SAT"};
+        result.AddRange(answer.Select(i => i.ToString()));
+        return result;
+    }
     
     public static void Main(string[] args)
     {
@@ -77,25 +104,7 @@ public class Solver
         }
         
         var path = args[0];
-        var file = File.ReadAllLines(path);
-        var clauses = new List<List<int>>();
-        foreach (var line in file)
-        {
-            if (line.StartsWith("c") || line.StartsWith("p")) continue;
-            var clause = line.Split(" ").Select(int.Parse).ToList();
-            clauses.Add(clause);
-        }
-        
-        var result = Solve(clauses, new List<int>());
-        if (result == null)
-        {
-            Console.WriteLine("UNSAT");
-        }
-        else
-        {
-            Console.WriteLine("SAT");
-            foreach (var i in result)
-                Console.Write(i + " ");
-        }
+        var result = Solve(path);
+        Console.WriteLine(string.Join(" ", result));
     }
 }

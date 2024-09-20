@@ -22,7 +22,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="TestData\" />
+        <None Update="TestData\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Solver\Solver.csproj" />
+    </ItemGroup>
+
 
 </Project>
