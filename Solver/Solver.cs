@@ -29,6 +29,7 @@ public class Solver
          // Исключение «чистых» переменных
          clauses
              .SelectMany(c => c)
+             .Distinct()
              .ToList()
              .ForEach(l =>
              {
@@ -36,7 +37,6 @@ public class Solver
                  {
                      answer.Add(l);
                      clauses.RemoveAll(c => c.Contains(l)); // удаляем клозы которые стали истинны
-                     clauses.ForEach(c => c.RemoveAll(x => x == -l)); // удаляем из клоз ложный литерал
                  }
              });
          

@@ -1,33 +1,49 @@
 namespace Tests;
-
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Solver;
-public class Tests
+
+[TestFixture]
+public class SolverTests
 {
-    public List<string> SATFilesPaths { get; set; }
-    public List<string> UNSATFilesPaths { get; set; }
-    [SetUp]
-    public void Setup()
+    // Источник данных для SAT файлов
+    public static IEnumerable<TestCaseData> SATFilesSource()
     {
         string testDataDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData");
-        SATFilesPaths = Directory.GetFiles(testDataDirectory, "uf*").ToList();
-        UNSATFilesPaths = Directory.GetFiles(testDataDirectory, "aim*").ToList();
-    }
-
-    [Test]
-    public void SATTests()
-    {
-        foreach (var answer in SATFilesPaths.Select(path => Solver.Solve(path)))
+        foreach (var filePath in Directory.GetFiles(testDataDirectory, "uf*"))
         {
-            Assert.That(answer[0], Is.EqualTo("SAT"));
+            string fileName = Path.GetFileName(filePath);
+            yield return new TestCaseData(filePath).SetName($"SATTest_{fileName}");
         }
     }
 
-    [Test]
-    public void UNSATTests()
+    // Источник данных для UNSAT файлов
+    public static IEnumerable<TestCaseData> UNSATFilesSource()
     {
-        foreach (var answer in UNSATFilesPaths.Select(path => Solver.Solve(path)))
+        string testDataDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestData");
+        foreach (var filePath in Directory.GetFiles(testDataDirectory, "aim*"))
         {
-            Assert.That(answer[0], Is.EqualTo("UNSAT"));
+            string fileName = Path.GetFileName(filePath);
+            yield return new TestCaseData(filePath).SetName($"UNSATTest_{fileName}");
         }
+    }
+
+    // Тест для каждого SAT файла
+    [TestCaseSource(nameof(SATFilesSource))]
+    public void SATTest(string filePath)
+    {
+        var answer = Solver.Solve(filePath);
+        Assert.That(answer[0], Is.EqualTo("SAT"), $"Failed on file {Path.GetFileName(filePath)}");
+    }
+
+    // Тест для каждого UNSAT файла
+    [TestCaseSource(nameof(UNSATFilesSource))]
+    public void UNSATTest(string filePath)
+    {
+        var answer = Solver.Solve(filePath);
+        Assert.That(answer[0], Is.EqualTo("UNSAT"), $"Failed on file {Path.GetFileName(filePath)}");
     }
 }
