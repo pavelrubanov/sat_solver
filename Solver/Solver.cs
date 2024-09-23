@@ -15,16 +15,20 @@ public class Solver
         if (clauses.Count == 0) return answer;
         
         // Правило единственной клаузулы
-        clauses
-            .Where(c => c.Count == 1)
-            .Select(c => c[0])
-            .ToList() // одиночные литералы
-            .ForEach(l =>
-            {
-                answer.Add(l);
-                clauses.RemoveAll(c => c.Contains(l)); // удаляем клозы которые стали истинны
-                clauses.ForEach(c => c.RemoveAll(x => x == -l)); // удаляем из клоз ложный литерал
-            });
+        while (clauses
+               .Count(c => c.Count == 1) > 0)
+        {
+            clauses
+                .Where(c => c.Count == 1)
+                .Select(c => c[0])
+                .ToList() // одиночные литералы
+                .ForEach(l =>
+                {
+                    answer.Add(l);
+                    clauses.RemoveAll(c => c.Contains(l)); // удаляем клозы которые стали истинны
+                    clauses.ForEach(c => c.RemoveAll(x => x == -l)); // удаляем из клоз ложный литерал
+                });
+        }
 
          // Исключение «чистых» переменных
          clauses
