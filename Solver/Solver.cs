@@ -49,7 +49,7 @@ public class Solver
          
          var chosenLiteral = clauses.First().First();
          return Solve(clauses.Clone(), answer.Clone(), chosenLiteral) 
-                ?? Solve(clauses.Clone(), answer.Clone(), -chosenLiteral);
+                ?? Solve(clauses, answer, -chosenLiteral);
     }
 
     public static List<string> Solve(string filePath)
